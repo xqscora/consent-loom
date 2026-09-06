@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Consent Loom | Working prototype</title>
+  <style>
+    :root { --ink:#202936; --muted:#6a7380; --line:#dfe4e5; --paper:#f8faf8; --white:#fff; --teal:#237a70; --teal-dark:#185b54; --mint:#dff2ea; --gold:#f4c96b; --coral:#e57567; --blue:#eaf1f7; }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); background:var(--paper); font:15px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif; }
+    button, textarea { font:inherit; }
+    .shell { width:min(1140px,calc(100% - 48px)); margin:0 auto; }
+    .topbar { display:flex; align-items:center; justify-content:space-between; padding:24px 0; }
+    .brand { display:flex; gap:10px; align-items:center; font-weight:850; letter-spacing:.01em; }
+    .brand-mark { display:grid; place-items:center; width:34px; height:34px; color:#fff; background:var(--teal); border-radius:10px; font-size:12px; }
+    .mode { color:var(--teal); background:var(--mint); border-radius:999px; padding:7px 11px; font-size:11px; font-weight:750; }
+    .hero { padding:45px 0 30px; }
+    .eyebrow { color:var(--teal); font-size:11px; font-weight:850; letter-spacing:.14em; margin:0 0 12px; text-transform:uppercase; }
+    h1 { max-width:720px; font-size:clamp(38px,6vw,68px); line-height:1.01; letter-spacing:-.05em; margin:0 0 17px; }
+    h1 span { color:var(--teal); }
+    .lede { max-width:680px; color:var(--muted); font-size:17px; margin:0; }
+    .workbench { display:grid; grid-template-columns:1.05fr .95fr; gap:16px; padding:28px 0 70px; }
+    .panel { background:var(--white); border:1px solid var(--line); border-radius:12px; padding:22px; box-shadow:0 10px 30px rgba(31,57,53,.05); }
+    .panel-head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:16px; }
+    h2 { font-size:18px; margin:0; }
+    h3 { font-size:13px; margin:0; }
+    .step { color:var(--teal); font-size:11px; font-weight:850; }
+    label { display:block; color:var(--muted); font-size:11px; font-weight:750; margin-bottom:8px; }
+    textarea { width:100%; min-height:142px; resize:vertical; color:var(--ink); border:1px solid #cfd8d8; border-radius:9px; padding:13px; line-height:1.55; outline:0; }
+    textarea:focus { border-color:var(--teal); box-shadow:0 0 0 3px rgba(35,122,112,.12); }
+    .hint { color:var(--muted); font-size:11px; margin:9px 0 18px; }
+    .actions { display:flex; flex-wrap:wrap; gap:9px; }
+    button { border:0; border-radius:8px; padding:10px 14px; font-weight:800; cursor:pointer; }
+    .primary { color:#fff; background:var(--teal); }
+    .primary:hover { background:var(--teal-dark); }
+    .quiet { color:var(--teal-dark); background:#edf5f2; }
+    .danger { color:#a9443a; background:#fff0ee; }
+    button:disabled { cursor:not-allowed; opacity:.45; }
+    .statusbar { display:flex; gap:8px; align-items:center; color:var(--muted); padding:12px 0 0; font-size:11px; }
+    .status-dot { width:7px; height:7px; border-radius:50%; background:var(--gold); }
+    .status-dot.ok { background:#4bb68d; }
+    .status-dot.bad { background:var(--coral); }
+    .proposal { display:grid; gap:15px; }
+    .proposal-empty { min-height:250px; display:grid; place-items:center; color:var(--muted); border:1px dashed #cfd8d8; border-radius:9px; text-align:center; padding:20px; }
+    .proposal-empty strong { display:block; color:var(--ink); margin-bottom:5px; }
+    .fields { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .field { padding:12px; background:#f5f9f7; border:1px solid #dcebe5; border-radius:8px; }
+    .field-wide { grid-column:1/-1; }
+    .field-label { color:var(--teal); display:block; font-size:10px; font-weight:850; letter-spacing:.09em; text-transform:uppercase; }
+    .field-value { display:block; margin-top:4px; font-size:13px; }
+    .source { color:var(--teal-dark); font-size:10px; margin-top:5px; }
+    .verify { padding:14px; border-radius:9px; background:#fff9ed; border:1px solid #f0ddb2; }
+    .verify.ok { background:#eef9f3; border-color:#cce8d8; }
+    .verify strong { display:block; font-size:12px; }
+    .verify p { color:var(--muted); font-size:11px; margin:5px 0 0; }
+    .teacher-view { border:1px solid #cfe1ef; background:var(--blue); border-radius:9px; padding:15px; }
+    .teacher-view p { color:#5c7080; font-size:11px; margin:5px 0 14px; }
+    .teacher-view .field { background:rgba(255,255,255,.55); border-color:#cbdde8; }
+    .receipt { margin-top:18px; padding-top:16px; border-top:1px solid var(--line); }
+    .receipt pre { white-space:pre-wrap; color:#36545c; background:#f3f7f5; border-radius:8px; padding:12px; font:11px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; }
+    .footer { display:flex; flex-wrap:wrap; justify-content:space-between; gap:15px; color:#87918f; border-top:1px solid var(--line); padding:20px 0 35px; font-size:11px; }
+    @media(max-width:800px) { .workbench { grid-template-columns:1fr; } }
+    @media(max-width:520px) { .shell { width:calc(100% - 30px); } .topbar { padding:17px 0; } .fields { grid-template-columns:1fr; } .field-wide { grid-column:auto; } h1 { font-size:44px; } }
+  </style>
+</head>
+<body>
+  <header class="topbar shell"><div class="brand"><span class="brand-mark">CL</span><span>Consent Loom</span></div><span class="mode">LOCAL PROTOTYPE · AI TRACK</span></header>
+  <main class="shell">
+    <section class="hero"><p class="eyebrow">Student-owned consent compiler</p><h1>Share the <span>minimum</span> a teacher needs.</h1><p class="lede">A working proof that AI can propose structure without becoming the authority. Write a request, inspect every source span, confirm locally, then share a time-bounded view.</p></section>
+    <section class="workbench" aria-label="Consent Loom workbench">
+      <article class="panel"><div class="panel-head"><h2>1. Student request</h2><span class="step" id="stateLabel">DRAFT</span></div><label for="request">Write the situation in your own words</label><textarea id="request">When group work gets loud, please give me the written first step and let me use the side table for ten minutes, for my teacher, until the end of this class.</textarea><p class="hint">The local extractor can propose fields, but it cannot share anything until you confirm it.</p><div class="actions"><button class="primary" id="extract" type="button">Propose fields</button><button class="quiet" id="clear" type="button">Clear</button></div><div class="statusbar"><span class="status-dot" id="statusDot"></span><span id="statusText">No proposal has been created.</span></div></article>
+      <article class="panel proposal" id="proposalPanel"><div class="panel-head"><h2>2. Inspect and verify</h2><span class="step">PROVENANCE</span></div><div class="proposal-empty" id="emptyState"><div><strong>Nothing is shared yet.</strong><span>Run the constrained extractor to see typed fields and source spans.</span></div></div></article>
+    </section>
+    <section class="panel" id="boundaryPanel"><div class="panel-head"><h2>What the teacher sees</h2><span class="step">MINIMUM VIEW</span></div><div class="proposal-empty" id="teacherEmpty"><div><strong>Student confirmation required</strong><span>The full request stays local until the student chooses to share a minimum protocol.</span></div></div></section>
+  </main>
+  <footer class="footer shell"><span>Consent Loom · no diagnosis · no permanent profile · no hidden sharing</span><span>Prototype state is local and reversible.</span></footer>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    let proposal = null;
+    const sample = { trigger:"high-noise group work", action:"written first step + side table", duration:"10 minutes", expiry:"end of this class", recipient:"chosen teacher only", sourceSpans:["gets loud","written first step","side table","ten minutes"] };
+    function setStatus(text, tone="") { $("statusText").textContent = text; $("statusDot").className = `status-dot ${tone}`; }
+    function escapeHtml(value) { return String(value).replace(/[&<>\"']/g, (char) => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[char])); }
+    function sourceText(value) { return `source: “${escapeHtml(value)}”`; }
+    function extractProposal(text) {
+      const clean = text.trim().replace(/\s+/g, " ");
+      const durationMatch = clean.match(/\b(\d+|one|two|three|five|ten|fifteen|twenty)\s*(minutes?|hours?|days?)\b/i);
+      const triggerMatch = clean.match(/\bwhen\s+(.+?)(?=,|\s+please\b|\s+let me\b)/i);
+      const actionMatch = clean.match(/\bplease\s+(.+?)(?=\s+for\s+(?:\d+|one|two|three|five|ten|fifteen|twenty)\s+(?:minutes?|hours?|days?)\b|\.$|$)/i);
+      const sideMatch = clean.match(/\b(?:use|move to|go to)\s+(?:the\s+)?([^,.]+?\btable)\b/i);
+      const expiryMatch = clean.match(/\b(?:until\s+)?(?:the\s+)?(end of this class|end of today|after this class|within today)\b/i);
+      const diagnosisMatch = clean.match(/\b(autis(?:m|tic)|adhd|diagnos(?:is|ed)|disorder|medical condition)\b/i);
+      const hasTeacher = /\bteacher\b|\bchosen teacher\b/i.test(clean);
+      const trigger = triggerMatch ? triggerMatch[1].trim() : "the stated situation";
+      const duration = durationMatch ? durationMatch[0] : "";
+      const action = actionMatch ? actionMatch[1].trim() : "";
+      const sourceSpans = [];
+      if (triggerMatch) sourceSpans.push(triggerMatch[1].trim());
+      if (action) sourceSpans.push(action);
+      if (duration) sourceSpans.push(duration);
+      if (expiryMatch) sourceSpans.push(expiryMatch[1]);
+      const errors = [];
+      if (!clean) errors.push("The request is empty.");
+      if (diagnosisMatch) errors.push("Diagnosis and medical labels cannot be compiled into a teacher protocol.");
+      if (!action) errors.push("No grounded support action was found.");
+      if (!duration) errors.push("Add a bounded duration such as ‘10 minutes’.");
+      if (!expiryMatch) errors.push("Add an explicit expiry such as ‘end of this class’.");
+      if (!hasTeacher) errors.push("Name the intended recipient boundary, such as ‘my teacher’.");
+      return { trigger, action, duration, expiry: expiryMatch ? expiryMatch[1] : "", recipient: hasTeacher ? "chosen teacher only" : "", sourceSpans, errors };
+    }
+    function fieldsHtml(data) {
+      const source = data.sourceSpans[0] || "request text";
+      return `<div class="fields"><div class="field field-wide"><span class="field-label">Trigger</span><span class="field-value">${escapeHtml(data.trigger)}</span><span class="source">${sourceText(source)}</span></div><div class="field"><span class="field-label">Support action</span><span class="field-value">${escapeHtml(data.action)}</span><span class="source">source span verified</span></div><div class="field"><span class="field-label">Duration</span><span class="field-value">${escapeHtml(data.duration)}</span><span class="source">${sourceText(data.duration || "missing")}</span></div><div class="field"><span class="field-label">Expiry</span><span class="field-value">${escapeHtml(data.expiry || "missing")}</span><span class="source">bounded by rule</span></div><div class="field"><span class="field-label">Recipient</span><span class="field-value">${escapeHtml(data.recipient || "missing")}</span><span class="source">explicit local choice</span></div></div>`;
+    }
+    function renderProposal() {
+      const passed = proposal.errors.length === 0;
+      const details = passed ? `<div class="verify ok"><strong>Policy check passed</strong><p>Every field has a source span or explicit boundary. No diagnosis, hidden recipient, or unbounded duration was accepted.</p></div><div class="actions"><button class="primary" id="confirm" type="button">Confirm locally</button><button class="quiet" id="edit" type="button">Edit request</button></div>` : `<div class="verify"><strong>Policy check blocked sharing</strong><p>${proposal.errors.map(escapeHtml).join(" ")}</p></div><div class="actions"><button class="quiet" id="edit" type="button">Edit request</button></div>`;
+      $("proposalPanel").innerHTML = `<div class="panel-head"><h2>2. Inspect and verify</h2><span class="step">PROVENANCE</span></div>${fieldsHtml(proposal)}${details}<div class="receipt"><h3>Local receipt preview</h3><pre>${escapeHtml(JSON.stringify({state:"proposed", fields:proposal, externalData:false}, null, 2))}</pre></div>`;
+      if (passed) $("confirm").addEventListener("click", confirmProposal);
+      $("edit").addEventListener("click", () => { $("stateLabel").textContent="DRAFT"; setStatus("Edit the request before confirming."); $("request").focus(); });
+    }
+    function confirmProposal() { $("stateLabel").textContent="CONFIRMED"; setStatus("Confirmed locally. Nothing has been shared.", "ok"); $("confirm").disabled=true; $("proposalPanel").insertAdjacentHTML("beforeend", `<div class="actions"><button class="primary" id="share" type="button">Share minimum view</button><button class="danger" id="revoke" type="button" disabled>Revoke shared view</button></div>`); $("share").addEventListener("click", shareProposal); }
+    function shareProposal() { $("stateLabel").textContent="SHARED"; setStatus("Minimum view shared. It expires at the stated boundary.", "ok"); $("share").disabled=true; $("revoke").disabled=false; $("revoke").addEventListener("click", revokeProposal); $("teacherEmpty").outerHTML = `<div class="teacher-view" id="teacherView"><span class="step">SHARED WITH CHOSEN TEACHER</span><p>The original request and source spans remain in the student's local view.</p><div class="fields"><div class="field"><span class="field-label">When</span><span class="field-value">${escapeHtml(proposal.trigger)}</span></div><div class="field"><span class="field-label">Try</span><span class="field-value">${escapeHtml(proposal.action)}</span></div><div class="field"><span class="field-label">For</span><span class="field-value">${escapeHtml(proposal.duration)}</span></div><div class="field"><span class="field-label">Until</span><span class="field-value">${escapeHtml(proposal.expiry)}</span></div></div></div>`; }
+    function revokeProposal() { $("stateLabel").textContent="REVOKED"; setStatus("Shared view revoked locally.", "bad"); $("revoke").disabled=true; $("share").disabled=false; $("share").textContent="Share again"; const teacher = $("teacherView"); if (teacher) teacher.outerHTML = `<div class="proposal-empty" id="teacherEmpty"><div><strong>Share revoked</strong><span>The teacher view is no longer active.</span></div></div>`; }
+    $("extract").addEventListener("click", () => { proposal = extractProposal($("request").value); $("stateLabel").textContent="PROPOSED"; setStatus(proposal.errors.length ? "Proposal blocked. Fix the policy findings before confirming." : "Fields proposed. Review source spans before confirming.", proposal.errors.length ? "bad" : ""); renderProposal(); });
+    $("clear").addEventListener("click", () => { proposal = null; $("request").value=""; $("stateLabel").textContent="DRAFT"; setStatus("Request cleared locally."); $("proposalPanel").innerHTML='<div class="panel-head"><h2>2. Inspect and verify</h2><span class="step">PROVENANCE</span></div><div class="proposal-empty" id="emptyState"><div><strong>Nothing is shared yet.</strong><span>Run the constrained extractor to see typed fields and source spans.</span></div></div>'; });
+  </script>
+</body>
+</html>

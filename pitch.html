@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Consent Loom | CSH Social Impact Ideathon</title>
+  <style>
+    :root { color-scheme: dark; --ink:#eef3f1; --muted:#aebfbb; --bg:#112522; --panel:#19332e; --line:#3f7168; --accent:#f2c879; --mint:#9ed8c7; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:linear-gradient(135deg,#112522,#1d3d35); color:var(--ink); font:16px/1.55 system-ui,-apple-system,Segoe UI,sans-serif; }
+    main { max-width:1100px; margin:auto; padding:56px 28px 72px; }
+    .eyebrow { color:var(--accent); letter-spacing:.12em; text-transform:uppercase; font-size:.78rem; font-weight:700; }
+    h1 { max-width:760px; font-size:clamp(2.5rem,6vw,5.4rem); line-height:1.02; margin:12px 0 20px; }
+    .lede { max-width:760px; color:var(--mint); font-size:1.3rem; }
+    .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; margin-top:42px; }
+    section { border:1px solid var(--line); background:rgba(25,51,46,.85); padding:24px; border-radius:8px; }
+    h2 { margin:0 0 10px; color:var(--accent); font-size:1.1rem; }
+    .flow { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; margin-top:18px; }
+    .step { border-top:3px solid var(--mint); padding-top:12px; }
+    .step b { display:block; color:var(--mint); margin-bottom:5px; }
+    pre { overflow:auto; color:#dff3ea; background:#0b1917; padding:16px; border-radius:6px; }
+    .metric { color:var(--mint); font-size:1.05rem; }
+    footer { color:var(--muted); margin-top:28px; }
+    @media (max-width:720px) { main { padding:36px 18px 52px; } .grid,.flow { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="eyebrow">CSH Social Impact Ideathon · AI track</p>
+    <h1>Consent Loom</h1>
+    <p class="lede">Turn a student's own words into the smallest support protocol a teacher can safely act on.</p>
+    <div class="grid">
+      <section><h2>The problem</h2><p>Students repeat sensitive support needs. Each retelling creates delay, over-collection, or an invented label. A useful system must preserve agency, not just predict a category.</p></section>
+      <section><h2>The technical thesis</h2><p>AI may propose structure, but it cannot authorize sharing. Provenance, expiry, revocation, and a deterministic policy checker are part of the model boundary.</p></section>
+    </div>
+    <section style="margin-top:16px"><h2>From language to consent</h2><div class="flow"><div class="step"><b>1 · Write</b>Student describes a situation and a possible support.</div><div class="step"><b>2 · Extract</b>AI proposes typed fields plus source spans.</div><div class="step"><b>3 · Verify</b>Rules reject diagnosis, hidden recipients, and unbounded actions.</div><div class="step"><b>4 · Share</b>Student confirms a minimum teacher view, then it expires or can be revoked.</div></div></section>
+    <div class="grid">
+      <section><h2>Inspectable receipt</h2><pre>{
+  "trigger": "high-noise group work",
+  "support_action": "written first step",
+  "duration": "10 minutes",
+  "source_spans": ["gets loud", "first step"]
+}</pre></section>
+      <section><h2>Pilot metrics</h2><p class="metric">Time to usable support</p><p class="metric">Student correction rate</p><p class="metric">Unsupported-field rejection rate</p><p class="metric">Expiry and revocation compliance</p><p class="metric">Sensitive fields omitted from teacher view</p></section>
+    </div>
+    <footer>No diagnosis. No permanent profile. No hidden sharing. The student can edit, revoke, or bypass the model.</footer>
+  </main>
+</body>
+</html>

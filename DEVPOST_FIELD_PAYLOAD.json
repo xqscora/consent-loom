@@ -1,0 +1,24 @@
+{
+  "project_name": "Consent Loom",
+  "track": "AI",
+  "tagline": "A local-first AI policy compiler that turns a student's words into a consent-bounded support protocol.",
+  "problem_statement": "Students repeat sensitive support needs to different teachers, creating delay, over-collection, and invented labels. The next adult usually needs one concrete action, not a private life story.",
+  "proposed_solution": "Consent Loom lets a student write a request in ordinary language. An AI extractor proposes typed fields and source spans, a deterministic policy checker rejects unsupported diagnosis, hidden recipients, unbounded duration, and ungrounded actions, and the student confirms or edits the minimum teacher-facing protocol. The protocol can expire or be revoked.",
+  "technology_component": "Constrained AI extraction, source-span provenance, schema validation, deterministic consent and expiry policy checks, a local state machine, and a redaction layer that produces the minimum teacher view.",
+  "beneficiaries": "Students who repeatedly explain support needs, teachers and learning-support teams, and schools that need measurable consent and retention boundaries.",
+  "potential_impact": "Measure time from request to usable support, student correction rate, unsupported-field rejection rate, expiry and revocation compliance, and sensitive fields omitted from the teacher view.",
+  "feasibility_plan": "Implement the typed schema, receipt, and verifier first; add a local or consented hosted model behind the same verifier; test with synthetic data before any consented pilot.",
+  "challenges_limitations": "Natural language ambiguity, device security for the local vault, the distinction between a support protocol and a legal accommodation decision, and the need for a student bypass when extraction misses a need.",
+  "supporting_material": "pitch.png",
+  "prototype_local_path": "prototype.html",
+  "video_local_path": "demo/consent_loom_demo_2026-09-05.webm",
+  "youtube_url": "https://youtu.be/1j84uVINZ2w",
+  "youtube_visibility": "unlisted",
+  "video_uploaded": true,
+  "screenshots": [
+    "demo/consent_loom_draft.png",
+    "demo/consent_loom_proposed.png",
+    "demo/consent_loom_shared.png"
+  ],
+  "ai_use_disclosure": "AI coding assistance was used to draft and edit this local pitch material. The project owner reviewed the concept, technical boundaries, and claims and remains responsible for the submission."
+}
