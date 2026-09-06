@@ -16,6 +16,7 @@
   "youtube_visibility": "unlisted",
   "video_uploaded": true,
   "repository_url": "https://github.com/xqscora/consent-loom",
+  "live_demo_url": "https://xqscora.github.io/consent-loom/",
   "screenshots": [
     "demo/consent_loom_draft.png",
     "demo/consent_loom_proposed.png",
